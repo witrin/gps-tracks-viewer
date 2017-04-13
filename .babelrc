@@ -1,0 +1,7 @@
+{
+	"plugins": [
+		"transform-custom-element-classes",
+		"add-module-exports",
+		"transform-es2015-modules-commonjs"
+	]
+}

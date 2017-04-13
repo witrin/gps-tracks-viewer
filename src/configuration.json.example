@@ -1,0 +1,12 @@
+{
+	"map": {
+		"start": {
+			"latitude": 49.75565,
+			"longitude": 6.63935,
+			"zoom": 15
+		}
+	},
+	"tracks": {
+		"endpoint": "http://localhost:8080/api/tracks/"
+	}
+}

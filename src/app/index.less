@@ -1,0 +1,53 @@
+@app-desktop-screen-width: 768px;
+@app-navigation-height: 40%;
+@app-navigation-width: 300px;
+@app-navigation-list-pager-height: 60px;
+@app-navigation-list-item-height: 50px;
+
+.app {
+	display: flex;
+	flex-flow: column;
+	flex-wrap: wrap;
+
+	.main {
+		flex-grow: 1;
+	}
+
+	.navigation {
+		height: @app-navigation-height;
+		width: 100%;
+		overflow: hidden;
+		position: relative;
+
+		.pager {
+			height: @app-navigation-list-pager-height;
+		}
+
+		.list {
+			display: block;
+			height: ~"calc( 100% - "@app-navigation-list-pager-height~" )";
+
+			.item {
+				height: @app-navigation-list-item-height;
+				line-height: @app-navigation-list-item-height;
+				padding: 0 5px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				width: 100%;
+				display: inline-block;
+				border-bottom: solid 1px black;
+			}
+		}
+	}
+
+	@media only screen and (min-width: @app-desktop-screen-width) {
+		flex-flow: row;
+		flex-wrap: nowrap;
+
+		.navigation {
+			height: 100%;
+			width: @app-navigation-width;
+		}
+	}
+}
