@@ -1,0 +1,40 @@
+# GPS Tracks Viewer
+
+A simple GPS tracks viewer using:
+
+ - ECMAScript 2015 (http://ecma-international.org/ecma-262/6.0/)
+ - Custom elements (https://w3.org/TR/custom-elements/)
+ - Google Maps API (https://developers.google.com/maps/)
+
+## Build
+
+To build the viewer you need to run `npm install` once. The following build
+scripts are available and require a Bash 3+:
+
+  - `build` - Builds a release version into the *target directory*.
+  - `watch` - Builds continuously a debug version into the *target directory*.
+  - `debug` - Builds a debug version into the *target directory*.
+  - `lint` - Lints the sources using *eslint* (http://eslint.org/).
+  - `start` - Starts a local web server for the viewer using the *target port*.
+  - `stop` - Stops a started web server.
+  - `clean` - Cleans the latest build.
+
+The *target directory* is per default `dist`. Use the package configuration 
+setting `target.folder` to change it. The *target port* is per default `8080`.
+Use the package configuration setting `target.port` to change it. See also 
+https://docs.npmjs.com/misc/config how to change the package configuration.
+
+## Usage
+
+The viewer requires a REST API for the GPS tracks, which is not part of this
+package. To configure the viewer use the `configuration.json` within its root
+folder. There is a `configuration.example.json` as a template. For more details
+about the REST API see `src/services/tracks/index.js`.
+
+## Architecture
+
+The main application can be found in `src/app/index.js`. It is started by the
+bootstrap script within `src/boot.js`. The UI components are provided with 
+`src/elements` and directly used by the main application. The services within
+`src/services` provide access to the GPS tracks, the application configuration
+and the Google Maps API. The main application template is in `src/index.html`.
