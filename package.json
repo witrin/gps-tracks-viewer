@@ -62,7 +62,6 @@
 		"prebuild": "npm -s run init",
 		"predebug": "npm -s run init",
 		"prewatch": "npm -s run init",
-		"prestart": "npm -s run build",
 
 		"lint": "npm -s run lint:scripts",
 		"debug": "npm -s run debug:markup && npm -s run debug:styles && npm -s run debug:scripts",
