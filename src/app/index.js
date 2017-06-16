@@ -46,7 +46,7 @@ export default class App {
 			document.querySelector("[data-pager=previous]").addEventListener("click", this._onNavigationPagerPreviousClick.bind(this));
 			this._update();
 		}).bind(this));
-		// add event listener for the window resiye event
+		// add event listener for the window resize event
 		window.addEventListener("resize", this._onResize.bind(this), false);
 	}
 
