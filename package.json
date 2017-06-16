@@ -53,7 +53,7 @@
 		"build:markup": "npm -s run debug:markup",
 		"build:styles": "npm -s run debug:styles && npm -s run compress:styles",
 
-		"clean": "rm -rf ${npm_package_config_target_folder} tmp",
+		"clean": "rm -rf ${npm_package_config_target_folder} tmp node_modules",
 		"start": "http-server ${npm_package_config_target_folder} -p ${npm_package_config_target_port} & echo $! > `mktemp /tmp/http-server-XXXXXX`",
 		"stop": "kill `cat /tmp/http-server-* 2> /dev/null` 2> /dev/null && rm /tmp/http-server-* 2> /dev/null || true",
 		
