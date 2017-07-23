@@ -25,6 +25,7 @@
 		"babel-plugin-transform-custom-element-classes": "^0.1.0"
 	},
 	"dependencies": {
+		"leaflet": "^1.0.3",
 		"@webcomponents/custom-elements": "webcomponents/custom-elements",
 		"modernizr": "^3.5.0"
 	},
@@ -32,7 +33,7 @@
 		"create:target": "mkdir -p ${npm_package_config_target_folder} tmp",
 		"create:modernizr": "modernizr -c modernizr.json -d tmp",
 
-		"lint:scripts": "eslint --max-warnings 1000 src/**/*.js",
+		"lint:scripts": "eslint 'src/**/*.js'",
 		"compile:scripts": "babel src --out-dir tmp",
 		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js",
 		"compress:scripts": "uglifyjs ${npm_package_config_target_folder}/bundle.js -c -m -o ${npm_package_config_target_folder}/bundle.js",

@@ -1,19 +1,57 @@
-import GoogleMapsApiService from "../../services/google-maps-api";
+import Leaflet from "leaflet";
 
 export default class MapElement extends HTMLElement {
 
 	constructor() {
 		super();
 
+		this._defaults = {
+			layers: {
+				tiles: {
+					url: null
+				},
+				path: {
+				}
+			}
+		};
+
 		this._map = null;
 		this._path = null;
 		this._polyline = null;
 		this._styles = null;
+		this._options = Object.assign({}, this._defaults);
+		this._view = document.createElement("div");
 		this._mapping = function (coordinate) { return coordinate; };
 	}
 
 	connectedCallback() {
-		GoogleMapsApiService.load().then(this._update.bind(this));
+		this.appendChild(this._view);
+
+		this._map = Leaflet.map(
+			this._view,
+			{ attributionControl: false }
+		);
+
+		this.options = this._options;
+	}
+
+	get options() {
+		return this._options;
+	}
+
+	set options(options) {
+		this._options = Object.assign(this._defaults, options);
+
+		if (this._layer) {
+			this._layer.remove();
+		}
+
+		this._layer = Leaflet.tileLayer(
+			this._options.layers.tiles.url,
+			this._options.layers.tiles.options
+		);
+
+		this._layer.addTo(this._map);
 	}
 
 	get mapping() {
@@ -30,9 +68,7 @@ export default class MapElement extends HTMLElement {
 
 	set center(center) {
 		this._center = this._mapping(center) || { lat: 0, lng: -180 };
-		this._update((function () {
-			this._map.setZoom(this._zoom);
-		}).bind(this));
+		this._map.panTo(this._center);
 	}
 
 	get zoom() {
@@ -41,9 +77,7 @@ export default class MapElement extends HTMLElement {
 
 	set zoom(zoom) {
 		this._zoom = Number(zoom) || 3;
-		this._update((function () {
-			this._map.setZoom(this._zoom);
-		}).bind(this));
+		this._map.setZoom(this._zoom);
 	}
 
 	get path() {
@@ -52,29 +86,15 @@ export default class MapElement extends HTMLElement {
 
 	set path(path) {
 		this._path = Array.from(path).map(this._mapping);
-		this._update((function () {
-			if (this._polyline) {
-				this._polyline.setMap(null);
-			}
 
-			this._polyline = new window.google.maps.Polyline({
-				path: this._path,
-				geodesic: true,
-				strokeColor: "#FF0000",
-				strokeOpacity: 1.0,
-				strokeWeight: 2
-			});
+		if (this._polyline) {
+			this._polyline.remove();
+		}
 
-			let bounds = new window.google.maps.LatLngBounds();
+		this._polyline = Leaflet.polyline(this._path, this._options.layers.path);
 
-			this._path.forEach(function (coordinate) {
-				bounds.extend(coordinate);
-			}, this);
-
-			this._map.fitBounds(bounds);
-
-			this._polyline.setMap(this._map);
-		}).bind(this));
+		this._polyline.addTo(this._map);
+		this._map.fitBounds(this._polyline.getBounds());
 	}
 
 	get styles() {
@@ -83,24 +103,5 @@ export default class MapElement extends HTMLElement {
 
 	set styles(styles) {
 		this._styles = styles;
-		this._update((function () {
-			this._map.data.setStyle(this._styles);
-		}).bind(this));
-	}
-
-	_update(callback) {
-		if (window.google && window.google.maps) {
-			if (this._map === null) {
-				this._map = new window.google.maps.Map(this, {
-					zoom: this._zoom,
-					center: this._center,
-					styles: this._styles
-				});
-			}
-
-			if (typeof callback === "function") {
-				callback();
-			}
-		}
 	}
 }
