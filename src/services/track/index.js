@@ -1,5 +1,9 @@
 export default class TrackService {
 
+	/**
+	 * Create a track service
+	 * @param {object} configuration
+	 */
 	constructor(configuration) {
 		this._configuration = Object.assign(
 			{
