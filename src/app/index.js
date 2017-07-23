@@ -1,4 +1,5 @@
 import MapElement from "../elements/map";
+import PlotElement from "../elements/plot";
 import ListElement from "../elements/list";
 import TrackService from "../services/track";
 import Configuration from "../services/configuration";
@@ -14,8 +15,6 @@ export default class App {
 	 * @param {object} data The configuration
 	 */
 	constructor(data) {
-		// semaphore for updating
-		this._updating = false;
 		// set the configuration
 		this._configuration = data;
 		// init the tracks service
@@ -28,9 +27,12 @@ export default class App {
 				}).bind(this));
 			}).bind(this));
 		}).bind(this));
+		// get the plot element
+		this._plot = document.querySelector(".app track-plot");
 		// get the map element
 		this._map = document.querySelector(".app track-map");
 		// setup the map element
+		this._map.options = this._configuration.map;
 		this._map.mapping = this._mapCoordinate;
 		this._map.center = this._configuration.map.start;
 		this._map.zoom = this._configuration.map.start.zoom;
@@ -62,6 +64,7 @@ export default class App {
 			Configuration.load(url).then(function (data) {
 				// init the elements
 				window.customElements.define("track-map", MapElement);
+				window.customElements.define("track-plot", PlotElement);
 				window.customElements.define("track-list", ListElement);
 				// create the application
 				try {
@@ -87,8 +90,33 @@ export default class App {
 	_onNavigationListItemClick(event) {
 		let data = JSON.parse(event.target.dataset.source);
 
+		this._list.selected = data;
+
 		this._tracks.load(data.id).then((function (data) {
+			let maximum = data.reduce(function (maximum, coordinate) {
+				return Math.max(maximum, coordinate[2]);
+			}, -Infinity);
+			let minimum = data.reduce(function (minimum, coordinate) {
+				return Math.min(minimum, coordinate[2]);
+			}, Infinity);
+
 			this._map.path = data;
+
+			this._plot.ranges = {
+				x: [-1, data.length],
+				y: [minimum, maximum]
+			};
+
+			this._plot.relation = function (x) {
+				x = Math.ceil(x);
+
+				if (x <= 0 || x >= data.length) {
+					return minimum - 1;
+				}
+				else {
+					return data[x][2];
+				}
+			};
 		}).bind(this));
 
 		return false;
@@ -107,10 +135,6 @@ export default class App {
 	}
 
 	_onResize() {
-		if (this._updating) {
-			return;
-		}
-
 		window.requestAnimationFrame((function () {
 			this._update();
 		}).bind(this));
@@ -131,9 +155,7 @@ export default class App {
 	}
 
 	_update() {
-		this._updating = true;
 		document.querySelector("[data-pager=page]").innerHTML = this._list.page + 1;
 		document.querySelector("[data-pager=pages]").innerHTML = this._list.pages;
-		this._updating = false;
 	}
 }

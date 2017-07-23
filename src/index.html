@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<meta charset="UTF-8">
-	<title></title>
-	<link rel="stylesheet" href="bundle.css" />
-	<script src="bundle.js"></script>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="bundle.css" />
+		<script src="bundle.js"></script>
+	</head>
 
-<body class="app">
-	<track-map class="main"></track-map>
-	<nav class="navigation">
-		<div class="pager">
-			<a href="#" data-pager="next">next</a>
-			<a href="#" data-pager="previous">previous</a>
-			<span data-pager="page"></span>
-			<span data-pager="pages"></span>
-		</div>
-		<track-list class="list">
-			<template data-template="item">
-				<a href="#" data-variable="name" class="item"></a>
-			</template>
-		</track-list>
-	</nav>
-</body>
+	<body class="app">
+
+		<track-map class="main">
+			<track-plot class="overlay"></track-plot>
+		</track-map>
+
+		<nav class="navigation">
+
+			<div class="pager">
+				<div class="controls">
+					<a href="#" data-pager="previous">🢐</a>
+					<a href="#" data-pager="next">🢒</a>
+				</div>
+				<div class="display">
+					<span data-pager="page"></span>/<span data-pager="pages"></span>
+				</div>
+			</div>
+
+			<track-list class="list">
+				<template data-template="item">
+					<a href="#" data-variable="name" class="item"></a>
+				</template>
+			</track-list>
+
+		</nav>
+
+	</body>
 
 </html>

@@ -1,16 +1,39 @@
 @app-desktop-screen-width: 768px;
 @app-navigation-height: 40%;
-@app-navigation-width: 300px;
-@app-navigation-list-pager-height: 60px;
-@app-navigation-list-item-height: 50px;
+@app-navigation-width: 30rem;
+@app-navigation-list-pager-height: 4rem;
+@app-navigation-list-item-height: 3rem;
+@app-primary-color: #000;
+@app-higlight-color: #F9F9F9;
+
+@map-selector: track-map;
+@plot-selector: track-plot;
+
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,700');
 
 .app {
 	display: flex;
 	flex-flow: column;
 	flex-wrap: wrap;
+	font-family: 'Rubik', sans-serif;
+	font-weight: 700;
 
 	.main {
 		flex-grow: 1;
+		position: relative;
+	}
+
+	.overlay {
+		position: absolute;
+		z-index: 10000;
+		width: 10rem;
+		height: 5rem;
+		background-color: rgba(0,0,0,0.6);
+		padding: 1rem 0 0;
+		margin: 1rem;
+		bottom: 0;
+		right: 0;
+		box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
 	}
 
 	.navigation {
@@ -21,22 +44,52 @@
 
 		.pager {
 			height: @app-navigation-list-pager-height;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1rem;
+			border-bottom: @app-primary-color solid 0.15rem;
+
+			a {
+				text-decoration: none !important;
+				font-size: 2rem;
+				color: @app-primary-color;
+			}
 		}
 
 		.list {
 			display: block;
 			height: ~"calc( 100% - "@app-navigation-list-pager-height~" )";
+			padding: 1rem;
 
 			.item {
-				height: @app-navigation-list-item-height;
 				line-height: @app-navigation-list-item-height;
-				padding: 0 5px;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				width: 100%;
 				display: inline-block;
-				border-bottom: solid 1px black;
+				text-decoration: none;
+				color: @app-primary-color;
+				visibility: visible;
+				padding: 0 1rem;
+				box-sizing: border-box;
+				outline: none;
+				position: relative;
+
+				&:hover {
+					background-color: @app-higlight-color;
+				}
+
+				&.inactive {
+					visibility: hidden;
+				}
+
+				&.selected:before {
+					content: "\203A";
+					position: absolute;
+					left: .5rem;
+				}
 			}
 		}
 	}
@@ -44,6 +97,13 @@
 	@media only screen and (min-width: @app-desktop-screen-width) {
 		flex-flow: row;
 		flex-wrap: nowrap;
+
+		.overlay {
+			width: 18rem;
+			height: 9rem;
+			padding: 1rem 0 0;
+			left: 0;
+		}
 
 		.navigation {
 			height: 100%;
