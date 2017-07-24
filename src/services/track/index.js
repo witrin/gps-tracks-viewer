@@ -2,7 +2,8 @@ export default class TrackService {
 
 	/**
 	 * Create a track service
-	 * @param {object} configuration
+	 *
+	 * @param {Object} configuration
 	 */
 	constructor(configuration) {
 		this._configuration = Object.assign(
@@ -16,6 +17,12 @@ export default class TrackService {
 		this._request.overrideMimeType("application/json");
 	}
 
+	/**
+	 * Load all tracks or a single track
+	 *
+	 * @param {String} id The track id to load a single track
+	 * @return {Object[]|Object}
+	 */
 	load(id = "") {
 		return new Promise((function (resolve, reject) {
 			let request = new XMLHttpRequest();

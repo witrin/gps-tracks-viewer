@@ -94,13 +94,10 @@ export default class PlotElement extends HTMLElement {
 	 * Set the relation
 	 */
 	set relation(relation) {
-		// check the argument type
-		if (typeof relation === "function") {
-			// assign the relation
-			this._relation = relation;
-			// update the element
-			this._update();
-		}
+		// assign the relation
+		this._relation = typeof relation === "function" ? relation : null;
+		// update the element
+		this._update();
 	}
 
 	/**
@@ -119,7 +116,7 @@ export default class PlotElement extends HTMLElement {
 	}
 
 	/**
-	 * Event handler when the element is resized
+	 * Update on resize
 	 */
 	_onResize() {
 		window.requestAnimationFrame((function () {
@@ -128,15 +125,11 @@ export default class PlotElement extends HTMLElement {
 	}
 
 	/**
-	 * Update the element
+	 * Update element
 	 */
 	_update() {
-		if (this._relation === null) {
-			return;
-		}
-
-		let iteration = 1 / this._resolution;
 		let context = this._context;
+		let iteration = 1 / this._resolution;
 		let range = {
 			x: Math.abs(this._ranges.x[1] - this._ranges.x[0]),
 			y: Math.abs(this._ranges.y[1] - this._ranges.y[0])
@@ -149,9 +142,12 @@ export default class PlotElement extends HTMLElement {
 		context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 		context.setTransform(1, 0, 0, -1, 0, this._canvas.height);
 		context.save();
-
 		context.translate(origin.x, -origin.y);
 		context.scale(this._canvas.width / range.x, this._canvas.height / range.y);
+
+		if (this._relation === null) {
+			return;
+		}
 
 		context.beginPath();
 		context.fillStyle = "#fff";
@@ -161,7 +157,6 @@ export default class PlotElement extends HTMLElement {
 			context.lineTo(x, this._relation(x));
 		}
 
-		context.closePath();
 		context.fill();
 		context.restore();
 	}

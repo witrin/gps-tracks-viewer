@@ -1,29 +1,42 @@
 import Leaflet from "leaflet";
 
+/**
+ * Map element
+ */
 export default class MapElement extends HTMLElement {
 
+	/**
+	 * Construct the element
+	 */
 	constructor() {
+		// call parent constructor
 		super();
-
+		// default options
 		this._defaults = {
 			layers: {
 				tiles: {
 					url: null
-				},
-				path: {
 				}
 			}
 		};
-
+		// init members
 		this._map = null;
-		this._path = null;
-		this._polyline = null;
-		this._styles = null;
+		this._path = [];
 		this._options = Object.assign({}, this._defaults);
+		this._polyline = Leaflet.polyline(this._path);
+		this._layer = Leaflet.tileLayer(
+			this._options.layers.tiles.url,
+			this._options.layers.tiles.options
+		);
+		// create map container
 		this._view = document.createElement("div");
+		// default mapping just pass through
 		this._mapping = function (coordinate) { return coordinate; };
 	}
 
+	/**
+	 * Attach element
+	 */
 	connectedCallback() {
 		this.appendChild(this._view);
 
@@ -32,76 +45,128 @@ export default class MapElement extends HTMLElement {
 			{ attributionControl: false }
 		);
 
+		this._layer.addTo(this._map);
+		this._polyline.addTo(this._map);
+
+		this._map.on("moveend", this._onMoveEnd.bind(this));
+
 		this.options = this._options;
 	}
 
+	/**
+	 * Get the options
+	 *
+	 * @return {Object}
+	 */
 	get options() {
 		return this._options;
 	}
 
+	/**
+	 * Set the options
+	 *
+	 * @param {Object} options The options
+	 */
 	set options(options) {
 		this._options = Object.assign(this._defaults, options);
 
-		if (this._layer) {
-			this._layer.remove();
-		}
-
-		this._layer = Leaflet.tileLayer(
-			this._options.layers.tiles.url,
-			this._options.layers.tiles.options
-		);
-
-		this._layer.addTo(this._map);
+		this._layer.setUrl(this._options.layers.tiles.url);
+		Leaflet.setOptions(this._layer, this._options.layers.tiles.options);
 	}
 
+	/**
+	 * Get the mapping function for coordinates
+	 *
+	 * @return {Function}
+	 */
 	get mapping() {
 		return this._mapping;
 	}
 
+	/**
+	 * Set the mapping function for a coordinates
+	 *
+	 * @param {Function} mapping The function which maps a single coordinate
+	 */
 	set mapping(mapping) {
 		this._mapping = mapping;
 	}
 
+	/**
+	 * Get the center
+	 *
+	 * @return {{lat: Number, lng: Number}}
+	 */
 	get center() {
 		return this._center;
 	}
 
+	/**
+	 * Set the center
+	 *
+	 * @param {{lat: Number, lng: Number}} center The center of the map
+	 */
 	set center(center) {
 		this._center = this._mapping(center) || { lat: 0, lng: -180 };
 		this._map.panTo(this._center);
 	}
 
+	/**
+	 * Get the zoom
+	 *
+	 * @return {Number}
+	 */
 	get zoom() {
 		return this._zoom;
 	}
 
+	/**
+	 * Set the zoom
+	 *
+	 * @param {Number} zoom The zoom for the map
+	 */
 	set zoom(zoom) {
 		this._zoom = Number(zoom) || 3;
 		this._map.setZoom(this._zoom);
 	}
 
+	/**
+	 * Get the path
+	 *
+	 * @return {{lat: Number, lng: Number}[]}
+	 */
 	get path() {
 		return this._path;
 	}
 
+	/**
+	 * Set the path
+	 *
+	 * @param {{lat: Number, lng: Number}[]} path The path as a list of coordinates
+	 */
 	set path(path) {
-		this._path = Array.from(path).map(this._mapping);
-
-		if (this._polyline) {
-			this._polyline.remove();
+		// check path is iterable
+		if (path !== null && path[Symbol.iterator] instanceof Function) {
+			// map path elements
+			this._path = Array.from(path).map(this._mapping);
+			// update polyline
+			this._polyline.getElement().style.visibility = "hidden";
+			this._polyline.getElement().classList.add("disabled");
+			this._polyline.setLatLngs(this._path);
+			// fit bounds
+			this._map.fitBounds(this._polyline.getBounds());
 		}
-
-		this._polyline = Leaflet.polyline(this._path, this._options.layers.path);
-
-		this._polyline.addTo(this._map);
-		this._map.fitBounds(this._polyline.getBounds());
+		// remove previous path if set
+		this._polyline.getElement().classList.toggle("disabled", path === null);
 	}
 
-	get styles() {
-		return this._styles;
-	}
-
-	set styles(styles) {
-		this._styles = styles;
+	/**
+	 * Update polyline after move end
+	 */
+	_onMoveEnd() {
+		if (this._polyline !== null && this._polyline.getElement() !== undefined) {
+			this._polyline.getElement().style.visibility = "";
+			this._polyline.getElement().classList.remove("disabled");
+		}
 	}
 }

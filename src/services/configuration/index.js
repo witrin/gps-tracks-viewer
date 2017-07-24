@@ -4,10 +4,10 @@
 export default class Configuration {
 
 	/**
-	 * Loads JSON configuration by an URL
+	 * Load configuration
 	 *
-	 * @param {string} url The URL
-	 * @return Promise
+	 * @param {String} url The URL for the configuration in JSON format
+	 * @return {Promise}
 	 */
 	static load(url) {
 		return new Promise(function (resolve, reject) {

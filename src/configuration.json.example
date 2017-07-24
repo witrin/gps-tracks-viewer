@@ -8,9 +8,6 @@
 		"layers": {
 			"tiles": {
 				"url": "http://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
-			},
-			"path": {
-				"color": "#000000"
 			}
 		}
 	},

@@ -5,8 +5,6 @@ export default class ListElement extends HTMLElement {
 
 	/**
 	 * Construct the element
-	 *
-	 * @param {Object} configuration The configuration for the element
 	 */
 	constructor() {
 		// call parent constructor
@@ -23,14 +21,14 @@ export default class ListElement extends HTMLElement {
 		this._length = 0;
 		// current item
 		this._selected = null;
-		// current page
-		this._page = 0;
 		// current data
 		this._items = [];
 	}
 
 	/**
 	 * Get the number of pages
+	 *
+	 * @return {Number}
 	 */
 	get pages() {
 		return this._offsets.pages.length;
@@ -38,49 +36,73 @@ export default class ListElement extends HTMLElement {
 
 	/**
 	 * Get the current page
+	 *
+	 * @return {Number}
 	 */
 	get page() {
 		return this._offsets.pages.indexOf(this._offsets.items);
 	}
 
 	/**
-	 * Get the selected data
+	 * Set the current page
+	 *
+	 * @param {Number} page The page index
 	 */
-	get selected() {
-		return this._selected;
+	set page(page) {
+		page = this._limit(page, this._offsets.pages);
+
+		if (this._offsets.items !== this._offsets.pages.indexOf(page)) {
+			this._offsets.items = this._offsets.pages[page];
+			this._update();
+		}
 	}
 
 	/**
-	 * Set the selected data
+	 * Get the selected data index
+	 *
+	 * @return {Number}
 	 */
-	set selected(item) {
-		// create the key
-		let key = JSON.stringify(item);
-		// find the key
-		if (this.items.find(function (data) {
-			return JSON.stringify(data) === key;
-		})) {
-			// set the selected
-			this._selected = item;
-			// update the element
+	get selected() {
+		return this._items.indexOf(this._selected);
+	}
+
+	/**
+	 * Set the selected data index
+	 *
+	 * @param {Number} selected The item index
+	 */
+	set selected(selected) {
+		// force number if possible
+		selected = Number.parseInt(selected);
+		// check something has changed
+		if (this._selected !== selected) {
+			// if selected is passed by index
+			this._selected = Number.isInteger(selected) ? this._items[this._limit(selected, this._items)] : null;
+			// update list
 			this._update();
 		}
 	}
 
 	/**
 	 * Get the element data
+	 *
+	 * @return {Object[]}
 	 */
 	get items() {
-		return this._items;
+		return Array.from(this._items);
 	}
 
 	/**
 	 * Set the element data
+	 *
+	 * @param {Object[]} items The items
 	 */
 	set items(items) {
-		// assign the data
+		// assign by value
 		this._items = Array.from(items);
-		// update the element
+		// reset selected item
+		this._selected = null;
+		// update list
 		this._reset();
 	}
 
@@ -88,9 +110,11 @@ export default class ListElement extends HTMLElement {
 	 * Attach element
 	 */
 	connectedCallback() {
+		// fetch item template
 		this._templates.item = this.querySelector("[data-template=item]");
-
+		// attach event handler for window resize
 		window.addEventListener("resize", this._onResize.bind(this), false);
+		// reset list
 		this._reset();
 	}
 
@@ -98,46 +122,18 @@ export default class ListElement extends HTMLElement {
 	 * Detach element
 	 */
 	disconnectedCallback() {
+		// detach handler for window resize
 		window.removeEventListener("resize", this._onResize.bind(this), false);
 	}
 
 	/**
-	 * Scroll next page
-	 */
-	next() {
-		this.jump(this._page + 1);
-	}
-
-	/**
-	 * Scroll previous page
-	 */
-	previous() {
-		this.jump(this._page - 1);
-	}
-
-	/**
-	 * Jump to the given page
+	 * Limit the given index for an array
 	 *
-	 * @param {number} page The page index
+	 * @param {Number} index The position to limit
+	 * @param {Array} array The array for the given position
 	 */
-	jump(page) {
-		console.log("Jump to", page);
-		this._page = this._limit(page, "pages");
-
-		if (this._offsets.items !== this._offsets.pages.indexOf(this._page)) {
-			this._offsets.items = this._offsets.pages[this._page];
-			this._update();
-		}
-	}
-
-	/**
-	 * Limit the given position of a section
-	 *
-	 * @param {number} position The position to limit
-	 * @param {string} section The section of the given position
-	 */
-	_limit(position, section) {
-		return Math.max(0, Math.min(position, this._offsets[section].length - 1));
+	_limit(index, array) {
+		return Math.max(0, Math.min(index, array.length - 1));
 	}
 
 	/**
@@ -150,7 +146,7 @@ export default class ListElement extends HTMLElement {
 	}
 
 	/**
-	 * Update the list
+	 * Update the element
 	 */
 	_update() {
 		// render the list from top, as long as there is still enough space for it
@@ -161,10 +157,7 @@ export default class ListElement extends HTMLElement {
 				this.appendChild(template.children[0]);
 			}
 			// bind data to current element
-			this._bind(
-				this._items[this._offset(i, "items")],
-				this.children[this._offset(i, "children")]
-			);
+			this._bind(this._offset(i, "items"), this.children[this._offset(i, "children")]);
 			// check if current element is visible
 			if (!this._isVisible(this._offset(i, "children"))) {
 				break;
@@ -179,13 +172,12 @@ export default class ListElement extends HTMLElement {
 	}
 
 	/**
-	 * Reset the list
+	 * Reset the element
 	 */
 	_reset() {
 		// reset the offsets
 		this._offsets.items = 0;
 		this._offsets.pages = [0];
-		this._page = 0;
 		// pre-calculate offsets for pages by rendering all pages,
 		// this is a nasty bottleneck but gives us much flexibility
 		// regarding the CSS layout
@@ -203,17 +195,27 @@ export default class ListElement extends HTMLElement {
 		}
 		// reset the data offset
 		this._offsets.items = 0;
+		// make sure selected is visible
+		if (this._selected !== null) {
+			let selected = this._items.indexOf(this._selected);
+			// pages are sorted ascending
+			this._offsets.items = this._offsets.pages.slice().reverse().reduce(function (previous, current) {
+				return previous > selected ? current : previous;
+			}, Infinity);
+		}
 		// render the page
 		this._update();
 	}
 
 	/**
-	 * Bind data to an element
+	 * Bind data to an item
 	 *
-	 * @param {Object} data The data to bind
+	 * @param {Number} item The position of the item to bind
 	 * @param {HTMLElement} element The element to bind the data to
 	 */
-	_bind(data, element) {
+	_bind(item, element) {
+		// fetch data to bind
+		let data = this._items[this._limit(item, this._items)];
 		// fill in data
 		Array.from(element.querySelector("[data-variable]") || [])
 			.concat("variable" in element.dataset ? [element] : [])
@@ -224,17 +226,17 @@ export default class ListElement extends HTMLElement {
 						return object[key];
 					}, data);
 			});
-		// attach data
-		element.dataset.source = JSON.stringify(data);
+		// attach absolute index
+		element.dataset.index = this._items.indexOf(data);
 		// toggle selected
-		element.classList.toggle("selected", element.dataset.source === JSON.stringify(this._selected));
+		element.classList.toggle("selected", data === this._selected);
 	}
 
 	/**
 	 * Offset the position of a section
 	 *
-	 * @param {number} position The position value to offset
-	 * @param {string} section The section of the position to offset
+	 * @param {Number} position The position value to offset
+	 * @param {String} section The section of the position to offset
 	 */
 	_offset(position, section) {
 		return this._offsets[section] + position;
@@ -243,15 +245,17 @@ export default class ListElement extends HTMLElement {
 	/**
 	 * Wether the item is at the given position visible or not
 	 *
-	 * @param {number} position The position of a child
-	 * @returns {boolean}
+	 * @param {Number} position The position of a child
+	 * @returns {Boolean}
 	 */
 	_isVisible(position) {
+		// we can't tell if it's not a child
 		if (position >= this.children.length || position <= -1) {
 			return undefined;
 		}
-
+		// use bounding client rect
 		let bounding = this.children[position].getBoundingClientRect();
+		// wether it's not complete within window or not
 		return bounding.top >= 0 && bounding.bottom < window.innerHeight;
 	}
 }

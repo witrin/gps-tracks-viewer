@@ -12,7 +12,7 @@ export default class App {
 	/**
 	 * Create an application
 	 *
-	 * @param {object} data The configuration
+	 * @param {Object} data The configuration
 	 */
 	constructor(data) {
 		// set the configuration
@@ -55,8 +55,8 @@ export default class App {
 	/**
 	 * Initialize the application
 	 *
-	 * @param {string} url The URL for the configuration
-	 * @return Promise
+	 * @param {String} url The URL for the configuration
+	 * @return {Promise}
 	 */
 	static init(url) {
 		return new Promise(function (resolve, reject) {
@@ -87,59 +87,87 @@ export default class App {
 		console.log("Application started...");
 	}
 
+	/**
+	 * Handle click event on navigation list item
+	 *
+	 * @param {Event} event The click event object
+	 */
 	_onNavigationListItemClick(event) {
-		let data = JSON.parse(event.target.dataset.source);
+		if (Number.parseInt(event.target.dataset.index) === this._list.selected) {
+			this._map.path = null;
+			this._plot.classList.add("disabled");
+			this._list.selected = null;
+		}
+		else {
+			let data = this._list.items[event.target.dataset.index];
 
-		this._list.selected = data;
+			this._list.selected = event.target.dataset.index;
 
-		this._tracks.load(data.id).then((function (data) {
-			let maximum = data.reduce(function (maximum, coordinate) {
-				return Math.max(maximum, coordinate[2]);
-			}, -Infinity);
-			let minimum = data.reduce(function (minimum, coordinate) {
-				return Math.min(minimum, coordinate[2]);
-			}, Infinity);
+			this._tracks.load(data.id).then((function (data) {
+				let maximum = data.reduce(function (maximum, coordinate) {
+					return Math.max(maximum, coordinate[2]);
+				}, -Infinity);
+				let minimum = data.reduce(function (minimum, coordinate) {
+					return Math.min(minimum, coordinate[2]);
+				}, Infinity);
 
-			this._map.path = data;
+				this._map.path = data;
 
-			this._plot.ranges = {
-				x: [-1, data.length],
-				y: [minimum, maximum]
-			};
+				this._plot.ranges = {
+					x: [-1, data.length],
+					y: [minimum, maximum]
+				};
 
-			this._plot.relation = function (x) {
-				x = Math.ceil(x);
+				this._plot.relation = function (x) {
+					x = Math.ceil(x);
 
-				if (x <= 0 || x >= data.length) {
-					return minimum - 1;
-				}
-				else {
-					return data[x][2];
-				}
-			};
-		}).bind(this));
+					if (x <= 0 || x >= data.length) {
+						return minimum - 1;
+					}
+					else {
+						return data[x][2];
+					}
+				};
+
+				this._plot.classList.remove("disabled");
+			}).bind(this));
+		}
 
 		return false;
 	}
 
+	/**
+	 * Handle click on navigation pager
+	 */
 	_onNavigationPagerNextClick() {
-		this._list.next();
+		this._list.page += 1;
 		this._update();
 		return false;
 	}
 
+	/**
+	 * Handle click on navigation pager
+	 */
 	_onNavigationPagerPreviousClick() {
-		this._list.previous();
+		this._list.page -= 1;
 		this._update();
 		return false;
 	}
 
+	/**
+	 * Handle window resize
+	 */
 	_onResize() {
 		window.requestAnimationFrame((function () {
 			this._update();
 		}).bind(this));
 	}
 
+	/**
+	 * Map entry from track to coordinate for map element
+	 *
+	 * @param {Array} coordinate The track entry to map
+	 */
 	_mapCoordinate(coordinate) {
 		if (Array.isArray(coordinate) && coordinate.length === 3) {
 			coordinate = { lat: coordinate[1], lng: coordinate[0] };
@@ -154,6 +182,9 @@ export default class App {
 		return coordinate;
 	}
 
+	/**
+	 * Update the application view
+	 */
 	_update() {
 		document.querySelector("[data-pager=page]").innerHTML = this._list.page + 1;
 		document.querySelector("[data-pager=pages]").innerHTML = this._list.pages;
