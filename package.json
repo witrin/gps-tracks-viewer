@@ -9,8 +9,7 @@
 	"license": "MIT",
 	"config": {
 		"target": {
-			"folder": "dist/",
-			"port": "8080"
+			"folder": "dist/"
 		}
 	},
 	"devDependencies": {
@@ -33,6 +32,9 @@
 		"modernizr": "^3.5.0"
 	},
 	"scripts": {
+		"init": "mkdir -p ${npm_package_config_target_folder} tmp && modernizr -c modernizr.json -d tmp",
+		"clean": "rm -rf ${npm_package_config_target_folder} tmp node_modules",
+
 		"lint:scripts": "eslint 'src/**/*.js'",
 		"compile:scripts": "babel src --out-dir tmp",
 		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js",
@@ -42,31 +44,25 @@
 		"bundle:styles": "cp tmp/styles.css ${npm_package_config_target_folder}/bundle.css",
 		"compress:styles": "cleancss -m -c -o ${npm_package_config_target_folder}/bundle.css ${npm_package_config_target_folder}/bundle.css",
 		
-		"debug:scripts": "npm -s run lint:scripts && npm -s run compile:scripts && npm -s run bundle:scripts",
+		"debug:scripts": "npm run lint:scripts && npm run compile:scripts && npm run bundle:scripts",
 		"debug:markup": "cp src/index.html ${npm_package_config_target_folder}",
-		"debug:styles": "npm -s run compile:styles && npm -s run bundle:styles",
+		"debug:styles": "npm run compile:styles && npm run bundle:styles",
 
-		"watch:scripts": "onchange 'src/**/*.js' -w -i -- npm -s run debug:scripts",
-		"watch:styles": "onchange 'src/**/*.less' -w -i -- npm -s run debug:styles",
-		"watch:markup": "onchange 'src/**/*.html' -w -i -- npm -s run debug:markup",
+		"watch:scripts": "onchange 'src/**/*.js' -w -i -- npm run debug:scripts",
+		"watch:styles": "onchange 'src/**/*.less' -w -i -- npm run debug:styles",
+		"watch:markup": "onchange 'src/**/*.html' -w -i -- npm run debug:markup",
 		
-		"build:scripts": "npm -s run debug:scripts && npm -s run compress:scripts",
-		"build:markup": "npm -s run debug:markup",
-		"build:styles": "npm -s run debug:styles && npm -s run compress:styles",
+		"build:scripts": "npm run debug:scripts && npm run compress:scripts",
+		"build:markup": "npm run debug:markup",
+		"build:styles": "npm run debug:styles && npm run compress:styles",
 
-		"clean": "rm -rf ${npm_package_config_target_folder} tmp node_modules",
-		"start": "http-server ${npm_package_config_target_folder} -p ${npm_package_config_target_port} & echo $! > `mktemp /tmp/http-server-XXXXXX`",
-		"stop": "kill `cat /tmp/http-server-* 2> /dev/null` 2> /dev/null && rm /tmp/http-server-* 2> /dev/null || true",
-		
-		"init": "mkdir -p ${npm_package_config_target_folder} tmp && modernizr -c modernizr.json -d tmp",
+		"prebuild": "npm run init",
+		"predebug": "npm run init",
+		"prewatch": "npm run init",
 
-		"prebuild": "npm -s run init",
-		"predebug": "npm -s run init",
-		"prewatch": "npm -s run init",
-
-		"lint": "npm -s run lint:scripts",
-		"debug": "npm -s run debug:markup && npm -s run debug:styles && npm -s run debug:scripts",
-		"watch": "concurrently --raw --kill-others 'npm -s run watch:scripts' 'npm -s run watch:markup' 'npm -s run watch:styles'",
-		"build": "npm -s run build:markup && npm -s run build:styles && npm -s run build:scripts"
+		"lint": "npm run lint:scripts",
+		"debug": "npm run debug:markup && npm run debug:styles && npm run debug:scripts",
+		"watch": "concurrently --raw --kill-others 'npm run watch:scripts' 'npm run watch:markup' 'npm run watch:styles'",
+		"build": "npm run build:markup && npm run build:styles && npm run build:scripts"
 	}
 }
