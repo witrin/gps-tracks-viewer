@@ -3,6 +3,9 @@
 	"version": "1.0.0-alpha",
 	"description": "",
 	"author": "Jawan Kolanowski <kolanowj@hochschule-trier.de>",
+	"contributors": [
+		"Christoph Braun <braunc@hochschule-trier.de>"
+	],
 	"license": "MIT",
 	"config": {
 		"target": {
@@ -30,9 +33,6 @@
 		"modernizr": "^3.5.0"
 	},
 	"scripts": {
-		"create:target": "mkdir -p ${npm_package_config_target_folder} tmp",
-		"create:modernizr": "modernizr -c modernizr.json -d tmp",
-
 		"lint:scripts": "eslint 'src/**/*.js'",
 		"compile:scripts": "babel src --out-dir tmp",
 		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js",
@@ -58,7 +58,7 @@
 		"start": "http-server ${npm_package_config_target_folder} -p ${npm_package_config_target_port} & echo $! > `mktemp /tmp/http-server-XXXXXX`",
 		"stop": "kill `cat /tmp/http-server-* 2> /dev/null` 2> /dev/null && rm /tmp/http-server-* 2> /dev/null || true",
 		
-		"init": "npm -s run create:target && npm -s run create:modernizr",
+		"init": "mkdir -p ${npm_package_config_target_folder} tmp && modernizr -c modernizr.json -d tmp",
 
 		"prebuild": "npm -s run init",
 		"predebug": "npm -s run init",
