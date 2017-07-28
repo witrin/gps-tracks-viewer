@@ -73,9 +73,9 @@ export default class App {
 				catch (error) {
 					reject(error);
 				}
-			}).catch(function (request) {
+			}).catch(function (error) {
 				// configuration could not loaded
-				reject(new Error(`Loading the application configuration from '${request.responseURL}' failed with '${request.statusText}'.`));
+				reject(new Error(`Loading configuration from '${error.responseURL}' failed`));
 			});
 		});
 	}
@@ -84,7 +84,7 @@ export default class App {
 	 * Run the application
 	 */
 	run() {
-		console.log("Application started...");
+		console.info("Application started...");
 	}
 
 	/**
