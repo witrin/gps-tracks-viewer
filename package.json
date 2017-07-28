@@ -18,7 +18,7 @@
 		"onchange": "^3.2.1",
 		"concurrently": "^3.5.0",
 		"clean-css-cli": "^4.1.6",
-		"uglify-js": "^3.0.26",
+		"uglify-es": "^3.0.26",
 		"less": "^2.7.2",
 		"babel-cli": "^6.24.1",
 		"babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
