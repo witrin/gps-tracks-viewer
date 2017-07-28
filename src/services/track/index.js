@@ -12,11 +12,7 @@ export default class TrackService {
 			},
 			configuration || {}
 		);
-
-		this._request = new XMLHttpRequest();
-		this._request.overrideMimeType("application/json");
 	}
-
 	/**
 	 * Load all tracks or a single track
 	 *
