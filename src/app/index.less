@@ -1,6 +1,7 @@
 @app-desktop-screen-width: 768px;
-@app-navigation-height: 40%;
-@app-navigation-width: 30rem;
+@app-navigation-height: 40vh;
+@app-navigation-minimum-height: 18rem;
+@app-navigation-width: 25rem;
 @app-navigation-list-pager-height: 4rem;
 @app-navigation-list-item-height: 3rem;
 @app-primary-color: #000;
@@ -8,11 +9,30 @@
 @app-main-fade-in: 100ms ease-in;
 @app-default-font: 'Open Sans';
 @app-default-font-family: @app-default-font, sans-serif;
+@app-desktop-font-size: 14px;
+@app-mobile-font-size: 12px;
 
 @map-selector: track-map;
 @plot-selector: track-plot;
 
 @import url('//fonts.googleapis.com/css?family=@{app-default-font}:300,700');
+
+html {
+	font-size: @app-mobile-font-size !important;
+
+	@media only screen and (min-width: @app-desktop-screen-width) {
+		font-size: @app-desktop-font-size !important;
+	}
+
+	&, body {
+		height: 100%;
+	}
+
+	a {
+		outline: none;
+		text-decoration: none;
+	}
+}
 
 .app {
 	display: flex;
@@ -60,6 +80,7 @@
 	}
 
 	.navigation {
+		min-height: @app-navigation-minimum-height;
 		height: @app-navigation-height;
 		width: 100%;
 		overflow: hidden;
@@ -71,12 +92,15 @@
 			justify-content: space-between;
 			align-items: center;
 			padding: 1rem;
-			border-bottom: @app-primary-color solid 0.15rem;
+			border-bottom: @app-primary-color solid 0.05rem;
 
 			a {
 				text-decoration: none !important;
 				font-size: 2rem;
 				color: @app-primary-color;
+				display: inline-block;
+				height: 1.5rem;
+				width: 1.5rem;
 			}
 		}
 
