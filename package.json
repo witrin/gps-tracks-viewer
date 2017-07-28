@@ -39,7 +39,7 @@
 		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js && cp src/*.example ${npm_package_config_target_folder}",
 		"compress:scripts": "uglifyjs ${npm_package_config_target_folder}/bundle.js -c -m -o ${npm_package_config_target_folder}/bundle.js",
 
-		"compile:styles": "for file in src/*.less src/**/*.less; do lessc $file tmp/`expr match \"$file\" 'src\/\\(.*\\)\\.less'`.css; done",
+		"compile:styles": "lessc src/styles.less tmp/styles.css",
 		"bundle:styles": "cp tmp/styles.css ${npm_package_config_target_folder}/bundle.css",
 		"compress:styles": "cleancss -m -c -o ${npm_package_config_target_folder}/bundle.css ${npm_package_config_target_folder}/bundle.css",
 		
