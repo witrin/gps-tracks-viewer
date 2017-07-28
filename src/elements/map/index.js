@@ -164,7 +164,7 @@ export default class MapElement extends HTMLElement {
 	 * Update polyline after move end
 	 */
 	_onMoveEnd() {
-		if (this._polyline !== null && this._polyline.getElement() !== undefined) {
+		if (this._polyline !== null && this._polyline.getElement() !== undefined && this._path !== null) {
 			this._polyline.getElement().style.visibility = "";
 			this._polyline.getElement().classList.remove("disabled");
 		}
