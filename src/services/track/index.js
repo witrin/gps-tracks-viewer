@@ -1,5 +1,4 @@
 export default class TrackService {
-
 	/**
 	 * Create a track service
 	 *

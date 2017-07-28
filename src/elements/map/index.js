@@ -4,7 +4,6 @@ import Leaflet from "leaflet";
  * Map element
  */
 export default class MapElement extends HTMLElement {
-
 	/**
 	 * Construct the element
 	 */
@@ -35,7 +34,6 @@ export default class MapElement extends HTMLElement {
 		// default mapping just pass through
 		this._mapping = function (coordinate) { return coordinate; };
 	}
-
 	/**
 	 * Attach element
 	 */
@@ -56,7 +54,6 @@ export default class MapElement extends HTMLElement {
 		// set map options
 		this.options = this._options;
 	}
-
 	/**
 	 * Get the options
 	 *
@@ -65,7 +62,6 @@ export default class MapElement extends HTMLElement {
 	get options() {
 		return this._options;
 	}
-
 	/**
 	 * Set the options
 	 *
@@ -73,11 +69,9 @@ export default class MapElement extends HTMLElement {
 	 */
 	set options(options) {
 		this._options = Object.assign(this._defaults, options);
-
 		this._layer.setUrl(this._options.layers.tiles.url);
 		Leaflet.setOptions(this._layer, this._options.layers.tiles.options);
 	}
-
 	/**
 	 * Get the mapping function for coordinates
 	 *
@@ -86,7 +80,6 @@ export default class MapElement extends HTMLElement {
 	get mapping() {
 		return this._mapping;
 	}
-
 	/**
 	 * Set the mapping function for a coordinates
 	 *
@@ -95,7 +88,6 @@ export default class MapElement extends HTMLElement {
 	set mapping(mapping) {
 		this._mapping = mapping;
 	}
-
 	/**
 	 * Get the center
 	 *
@@ -104,7 +96,6 @@ export default class MapElement extends HTMLElement {
 	get center() {
 		return this._center;
 	}
-
 	/**
 	 * Set the center
 	 *
@@ -114,7 +105,6 @@ export default class MapElement extends HTMLElement {
 		this._center = this._mapping(center);
 		this._map.panTo(this._center);
 	}
-
 	/**
 	 * Get the zoom
 	 *
@@ -123,7 +113,6 @@ export default class MapElement extends HTMLElement {
 	get zoom() {
 		return this._zoom;
 	}
-
 	/**
 	 * Set the zoom
 	 *
@@ -133,7 +122,6 @@ export default class MapElement extends HTMLElement {
 		this._zoom = Number(zoom) || 3;
 		this._map.setZoom(this._zoom);
 	}
-
 	/**
 	 * Get the path
 	 *
@@ -142,7 +130,6 @@ export default class MapElement extends HTMLElement {
 	get path() {
 		return this._path;
 	}
-
 	/**
 	 * Set the path
 	 *
@@ -165,7 +152,6 @@ export default class MapElement extends HTMLElement {
 		// remove previous path if set
 		this._polyline.getElement().classList.toggle("disabled", this._path === null);
 	}
-
 	/**
 	 * Update polyline after move end
 	 */

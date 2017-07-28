@@ -8,7 +8,6 @@ import Configuration from "../services/configuration";
  * The application controller
  */
 export default class App {
-
 	/**
 	 * Create an application
 	 *
@@ -51,7 +50,6 @@ export default class App {
 		// add event listener for the window resize event
 		window.addEventListener("resize", this._onResize.bind(this), false);
 	}
-
 	/**
 	 * Initialize the application
 	 *
@@ -79,14 +77,12 @@ export default class App {
 			});
 		});
 	}
-
 	/**
 	 * Run the application
 	 */
 	run() {
 		console.info("Application started...");
 	}
-
 	/**
 	 * Handle click event on navigation list item
 	 *
@@ -135,7 +131,6 @@ export default class App {
 
 		return false;
 	}
-
 	/**
 	 * Handle click on navigation pager
 	 */
@@ -144,7 +139,6 @@ export default class App {
 		this._update();
 		return false;
 	}
-
 	/**
 	 * Handle click on navigation pager
 	 */
@@ -153,7 +147,6 @@ export default class App {
 		this._update();
 		return false;
 	}
-
 	/**
 	 * Handle window resize
 	 */
@@ -162,7 +155,6 @@ export default class App {
 			this._update();
 		}).bind(this));
 	}
-
 	/**
 	 * Map entry from track to coordinate for map element
 	 *
@@ -181,7 +173,6 @@ export default class App {
 
 		return coordinate;
 	}
-
 	/**
 	 * Update the application view
 	 */

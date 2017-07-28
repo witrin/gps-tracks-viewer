@@ -2,7 +2,6 @@
  * Plot element
  */
 export default class PlotElement extends HTMLElement {
-
 	/**
 	 * Construct the element
 	 *
@@ -31,14 +30,12 @@ export default class PlotElement extends HTMLElement {
 		//
 		this.appendChild(this._canvas);
 	}
-
 	/**
 	 * Get the origin
 	 */
 	get origin() {
 		return this._origin;
 	}
-
 	/**
 	 * Set the origin
 	 */
@@ -48,14 +45,12 @@ export default class PlotElement extends HTMLElement {
 		// update the element
 		this._update();
 	}
-
 	/**
 	 * Get the origin
 	 */
 	get resolution() {
 		return this._resolution;
 	}
-
 	/**
 	 * Set the origin
 	 */
@@ -65,14 +60,12 @@ export default class PlotElement extends HTMLElement {
 		// update the element
 		this._update();
 	}
-
 	/**
 	 * Get the ranges
 	 */
 	get ranges() {
 		return this._ranges;
 	}
-
 	/**
 	 * Set the ranges
 	 */
@@ -82,14 +75,12 @@ export default class PlotElement extends HTMLElement {
 		// update the element
 		this._update();
 	}
-
 	/**
 	 * Get the relation
 	 */
 	get relation() {
 		return this._relation;
 	}
-
 	/**
 	 * Set the relation
 	 */
@@ -99,7 +90,6 @@ export default class PlotElement extends HTMLElement {
 		// update the element
 		this._update();
 	}
-
 	/**
 	 * Attach element
 	 */
@@ -107,14 +97,12 @@ export default class PlotElement extends HTMLElement {
 		window.addEventListener("resize", this._onResize.bind(this), false);
 		this._update();
 	}
-
 	/**
 	 * Detach element
 	 */
 	disconnectedCallback() {
 		window.removeEventListener("resize", this._onResize.bind(this), false);
 	}
-
 	/**
 	 * Update on resize
 	 */
@@ -123,7 +111,6 @@ export default class PlotElement extends HTMLElement {
 			this._update();
 		}).bind(this));
 	}
-
 	/**
 	 * Update element
 	 */

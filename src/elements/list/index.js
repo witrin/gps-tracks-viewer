@@ -2,7 +2,6 @@
  * List element
  */
 export default class ListElement extends HTMLElement {
-
 	/**
 	 * Construct the element
 	 */
@@ -24,7 +23,6 @@ export default class ListElement extends HTMLElement {
 		// current data
 		this._items = [];
 	}
-
 	/**
 	 * Get the number of pages
 	 *
@@ -33,7 +31,6 @@ export default class ListElement extends HTMLElement {
 	get pages() {
 		return this._offsets.pages.length;
 	}
-
 	/**
 	 * Get the current page
 	 *
@@ -42,7 +39,6 @@ export default class ListElement extends HTMLElement {
 	get page() {
 		return this._offsets.pages.indexOf(this._offsets.items);
 	}
-
 	/**
 	 * Set the current page
 	 *
@@ -56,7 +52,6 @@ export default class ListElement extends HTMLElement {
 			this._update();
 		}
 	}
-
 	/**
 	 * Get the selected data index
 	 *
@@ -65,7 +60,6 @@ export default class ListElement extends HTMLElement {
 	get selected() {
 		return this._items.indexOf(this._selected);
 	}
-
 	/**
 	 * Set the selected data index
 	 *
@@ -82,7 +76,6 @@ export default class ListElement extends HTMLElement {
 			this._update();
 		}
 	}
-
 	/**
 	 * Get the element data
 	 *
@@ -91,7 +84,6 @@ export default class ListElement extends HTMLElement {
 	get items() {
 		return Array.from(this._items);
 	}
-
 	/**
 	 * Set the element data
 	 *
@@ -105,7 +97,6 @@ export default class ListElement extends HTMLElement {
 		// update list
 		this._reset();
 	}
-
 	/**
 	 * Attach element
 	 */
@@ -117,7 +108,6 @@ export default class ListElement extends HTMLElement {
 		// reset list
 		this._reset();
 	}
-
 	/**
 	 * Detach element
 	 */
@@ -125,7 +115,6 @@ export default class ListElement extends HTMLElement {
 		// detach handler for window resize
 		window.removeEventListener("resize", this._onResize.bind(this), false);
 	}
-
 	/**
 	 * Limit the given index for an array
 	 *
@@ -135,7 +124,6 @@ export default class ListElement extends HTMLElement {
 	_limit(index, array) {
 		return Math.max(0, Math.min(index, array.length - 1));
 	}
-
 	/**
 	 * Event handler when the element is resized
 	 */
@@ -144,7 +132,6 @@ export default class ListElement extends HTMLElement {
 			this._reset();
 		}).bind(this));
 	}
-
 	/**
 	 * Update the element
 	 */
@@ -170,7 +157,6 @@ export default class ListElement extends HTMLElement {
 				child.classList.toggle("inactive", i >= this._length);
 			}.bind(this));
 	}
-
 	/**
 	 * Reset the element
 	 */
@@ -206,7 +192,6 @@ export default class ListElement extends HTMLElement {
 		// render the page
 		this._update();
 	}
-
 	/**
 	 * Bind data to an item
 	 *
@@ -231,7 +216,6 @@ export default class ListElement extends HTMLElement {
 		// toggle selected
 		element.classList.toggle("selected", data === this._selected);
 	}
-
 	/**
 	 * Offset the position of a section
 	 *
@@ -241,7 +225,6 @@ export default class ListElement extends HTMLElement {
 	_offset(position, section) {
 		return this._offsets[section] + position;
 	}
-
 	/**
 	 * Wether the item is at the given position visible or not
 	 *

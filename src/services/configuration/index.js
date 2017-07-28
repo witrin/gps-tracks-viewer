@@ -2,7 +2,6 @@
  * Service for configuration
  */
 export default class Configuration {
-
 	/**
 	 * Load configuration
 	 *
