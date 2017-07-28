@@ -36,7 +36,7 @@
 
 		"lint:scripts": "eslint 'src/**/*.js'",
 		"compile:scripts": "babel src --out-dir tmp",
-		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js",
+		"bundle:scripts": "browserify tmp/boot.js > ${npm_package_config_target_folder}bundle.js && cp src/*.example ${npm_package_config_target_folder}",
 		"compress:scripts": "uglifyjs ${npm_package_config_target_folder}/bundle.js -c -m -o ${npm_package_config_target_folder}/bundle.js",
 
 		"compile:styles": "for file in src/*.less src/**/*.less; do lessc $file tmp/`expr match \"$file\" 'src\/\\(.*\\)\\.less'`.css; done",
