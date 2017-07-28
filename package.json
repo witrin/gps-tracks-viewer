@@ -26,8 +26,8 @@
 		"babel-plugin-transform-custom-element-classes": "^0.1.0"
 	},
 	"dependencies": {
-		"leaflet": "^1.0.3",
-		"@webcomponents/custom-elements": "webcomponents/custom-elements",
+		"leaflet": "^1.1.0",
+		"@webcomponents/custom-elements": "^1.0.0",
 		"modernizr": "^3.5.0"
 	},
 	"scripts": {
