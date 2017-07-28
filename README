@@ -4,7 +4,7 @@ A simple GPS tracks viewer using:
 
  - ECMAScript 2015 (http://ecma-international.org/ecma-262/6.0/)
  - Custom elements (https://w3.org/TR/custom-elements/)
- - Google Maps API (https://developers.google.com/maps/)
+ - Leaflet (https://http://leafletjs.com/)
 
 ## Build
 
@@ -15,14 +15,10 @@ scripts are available and require a Bash 3+:
   - `watch` - Builds continuously a debug version into the *target directory*.
   - `debug` - Builds a debug version into the *target directory*.
   - `lint` - Lints the sources using *eslint* (http://eslint.org/).
-  - `start` - Starts a local web server for the viewer using the *target port*.
-  - `stop` - Stops a started web server.
   - `clean` - Cleans the latest build.
 
 The *target directory* is per default `dist`. Use the package configuration 
-setting `target.folder` to change it. The *target port* is per default `8080`.
-Use the package configuration setting `target.port` to change it. See also 
-https://docs.npmjs.com/misc/config how to change the package configuration.
+setting `target.folder` to change it (see https://docs.npmjs.com/misc/config).
 
 ## Usage
 
