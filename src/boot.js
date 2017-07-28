@@ -16,5 +16,5 @@ import App from "./app";
 App.init("configuration.json").then(function (app) {
 	app.run();
 }).catch(function (error) {
-	console.log(error.message);
+	console.error(`Initializing failed: ${error.message}.`);
 });
