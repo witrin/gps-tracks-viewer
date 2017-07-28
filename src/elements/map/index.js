@@ -28,6 +28,8 @@ export default class MapElement extends HTMLElement {
 			this._options.layers.tiles.url,
 			this._options.layers.tiles.options
 		);
+		this._center = { lat: 0, lng: -180 };
+		this._zoom = 3;
 		// create map container
 		this._view = document.createElement("div");
 		// default mapping just pass through
@@ -38,18 +40,20 @@ export default class MapElement extends HTMLElement {
 	 * Attach element
 	 */
 	connectedCallback() {
+		// append view element
 		this.appendChild(this._view);
-
+		// create map
 		this._map = Leaflet.map(
 			this._view,
 			{ attributionControl: false }
 		);
-
+		// append layer and polyline to map
 		this._layer.addTo(this._map);
 		this._polyline.addTo(this._map);
-
+		// init map
+		this._map.setZoom(this._zoom);
 		this._map.on("moveend", this._onMoveEnd.bind(this));
-
+		// set map options
 		this.options = this._options;
 	}
 
@@ -107,7 +111,7 @@ export default class MapElement extends HTMLElement {
 	 * @param {{lat: Number, lng: Number}} center The center of the map
 	 */
 	set center(center) {
-		this._center = this._mapping(center) || { lat: 0, lng: -180 };
+		this._center = this._mapping(center);
 		this._map.panTo(this._center);
 	}
 
@@ -151,13 +155,15 @@ export default class MapElement extends HTMLElement {
 			this._path = Array.from(path).map(this._mapping);
 			// update polyline
 			this._polyline.getElement().style.visibility = "hidden";
-			this._polyline.getElement().classList.add("disabled");
 			this._polyline.setLatLngs(this._path);
 			// fit bounds
 			this._map.fitBounds(this._polyline.getBounds());
 		}
+		else {
+			this._path = null;
+		}
 		// remove previous path if set
-		this._polyline.getElement().classList.toggle("disabled", path === null);
+		this._polyline.getElement().classList.toggle("disabled", this._path === null);
 	}
 
 	/**
