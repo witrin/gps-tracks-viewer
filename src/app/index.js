@@ -97,7 +97,7 @@ export default class App {
 	 * @param {Number} track The track id
 	 */
 	_showTrack(track) {
-		if (!track) {
+		if (track === null) {
 			// unset map path
 			this._map.path = null;
 			// hide plot
@@ -144,7 +144,7 @@ export default class App {
 	 */
 	_onPopState(event) {
 		// restore selection
-		if (event.state && event.state.item) {
+		if (event.state && event.state.item !== null) {
 			this._list.selected = event.state.item;
 			this._showTrack(this._list.items[event.state.item]);
 		}
@@ -185,7 +185,7 @@ export default class App {
 	/**
 	 * Handle click on navigation pager
 	 */
-	_onNavigationPagerPreviousClick() {
+	_onNavigationPagerPreviousClick(event) {
 		// prevent default
 		event.preventDefault();
 		// change list page
