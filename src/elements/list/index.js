@@ -3,7 +3,7 @@
  */
 export default class ListElement extends HTMLElement {
 	/**
-	 * Construct the element
+	 * Construct element
 	 */
 	constructor() {
 		// call parent constructor
@@ -24,7 +24,7 @@ export default class ListElement extends HTMLElement {
 		this._items = [];
 	}
 	/**
-	 * Get the number of pages
+	 * Get number of pages
 	 *
 	 * @return {Number}
 	 */
@@ -32,7 +32,7 @@ export default class ListElement extends HTMLElement {
 		return this._offsets.pages.length;
 	}
 	/**
-	 * Get the current page
+	 * Get current page
 	 *
 	 * @return {Number}
 	 */
@@ -40,20 +40,24 @@ export default class ListElement extends HTMLElement {
 		return this._offsets.pages.indexOf(this._offsets.items);
 	}
 	/**
-	 * Set the current page
+	 * Set current page
 	 *
 	 * @param {Number} page The page index
 	 */
 	set page(page) {
 		page = this._limit(page, this._offsets.pages);
-
+		// check something changed
 		if (this._offsets.items !== this._offsets.pages.indexOf(page)) {
+			// set offset
 			this._offsets.items = this._offsets.pages[page];
+			// update list
 			this._update();
+			// fire changed event
+			this.dispatchEvent(new CustomEvent("changed", { property: "page" }));
 		}
 	}
 	/**
-	 * Get the selected data index
+	 * Get selected data index
 	 *
 	 * @return {Number}
 	 */
@@ -61,7 +65,7 @@ export default class ListElement extends HTMLElement {
 		return this._items.indexOf(this._selected);
 	}
 	/**
-	 * Set the selected data index
+	 * Set selected data index
 	 *
 	 * @param {Number} selected The item index
 	 */
@@ -72,12 +76,20 @@ export default class ListElement extends HTMLElement {
 		if (this._selected !== selected) {
 			// if selected is passed by index
 			this._selected = Number.isInteger(selected) ? this._items[this._limit(selected, this._items)] : null;
+			// update items offset if selected
+			if (this._selected !== null) {
+				this._offsets.items = this._page(selected);
+			}
 			// update list
 			this._update();
+			// fire changed event
+			if (this._selected !== null) {
+				this.dispatchEvent(new CustomEvent("changed", { property: "page" }));
+			}
 		}
 	}
 	/**
-	 * Get the element data
+	 * Get element data
 	 *
 	 * @return {Object[]}
 	 */
@@ -85,7 +97,7 @@ export default class ListElement extends HTMLElement {
 		return Array.from(this._items);
 	}
 	/**
-	 * Set the element data
+	 * Set element data
 	 *
 	 * @param {Object[]} items The items
 	 */
@@ -116,7 +128,7 @@ export default class ListElement extends HTMLElement {
 		window.removeEventListener("resize", this._onResize.bind(this), false);
 	}
 	/**
-	 * Limit the given index for an array
+	 * Limit given index for an array
 	 *
 	 * @param {Number} index The position to limit
 	 * @param {Array} array The array for the given position
@@ -133,7 +145,7 @@ export default class ListElement extends HTMLElement {
 		}).bind(this));
 	}
 	/**
-	 * Update the element
+	 * Update element
 	 */
 	_update() {
 		// render the list from top, as long as there is still enough space for it
@@ -158,10 +170,10 @@ export default class ListElement extends HTMLElement {
 			}.bind(this));
 	}
 	/**
-	 * Reset the element
+	 * Reset element
 	 */
 	_reset() {
-		// reset the offsets
+		// reset offsets
 		this._offsets.items = 0;
 		this._offsets.pages = [0];
 		// pre-calculate offsets for pages by rendering all pages,
@@ -179,18 +191,28 @@ export default class ListElement extends HTMLElement {
 				this._offsets.items = this._offsets.pages.slice(-1).pop();
 			}
 		}
-		// reset the data offset
+		// reset data offset
 		this._offsets.items = 0;
 		// make sure selected is visible
 		if (this._selected !== null) {
-			let selected = this._items.indexOf(this._selected);
-			// pages are sorted ascending
-			this._offsets.items = this._offsets.pages.slice().reverse().reduce(function (previous, current) {
-				return previous > selected ? current : previous;
-			}, Infinity);
+			this._offsets.items = this._page(this._items.indexOf(this._selected));
 		}
 		// render the page
 		this._update();
+		// fire changed event
+		this.dispatchEvent(new CustomEvent("changed", { property: "page" }));
+	}
+	/**
+	 * Find page by items index
+	 *
+	 * @param {Number} index 
+	 * @return {Number}
+	 */
+	_page(index) {
+		// pages are sorted ascending
+		return this._offsets.pages.slice().reverse().reduce(function (previous, current) {
+			return previous > index ? current : previous;
+		}, Infinity);
 	}
 	/**
 	 * Bind data to an item
@@ -217,7 +239,7 @@ export default class ListElement extends HTMLElement {
 		element.classList.toggle("selected", data === this._selected);
 	}
 	/**
-	 * Offset the position of a section
+	 * Offset position of a section
 	 *
 	 * @param {Number} position The position value to offset
 	 * @param {String} section The section of the position to offset
@@ -226,7 +248,7 @@ export default class ListElement extends HTMLElement {
 		return this._offsets[section] + position;
 	}
 	/**
-	 * Wether the item is at the given position visible or not
+	 * Wether item is at the given position visible or not
 	 *
 	 * @param {Number} position The position of a child
 	 * @returns {Boolean}
