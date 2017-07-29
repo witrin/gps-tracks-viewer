@@ -5,7 +5,7 @@ import Leaflet from "leaflet";
  */
 export default class MapElement extends HTMLElement {
 	/**
-	 * Construct the element
+	 * Construct element
 	 */
 	constructor() {
 		// call parent constructor
@@ -55,7 +55,7 @@ export default class MapElement extends HTMLElement {
 		this.options = this._options;
 	}
 	/**
-	 * Get the options
+	 * Get options
 	 *
 	 * @return {Object}
 	 */
@@ -63,7 +63,7 @@ export default class MapElement extends HTMLElement {
 		return this._options;
 	}
 	/**
-	 * Set the options
+	 * Set options
 	 *
 	 * @param {Object} options The options
 	 */
@@ -73,7 +73,7 @@ export default class MapElement extends HTMLElement {
 		Leaflet.setOptions(this._layer, this._options.layers.tiles.options);
 	}
 	/**
-	 * Get the mapping function for coordinates
+	 * Get mapping function for coordinates
 	 *
 	 * @return {Function}
 	 */
@@ -81,7 +81,7 @@ export default class MapElement extends HTMLElement {
 		return this._mapping;
 	}
 	/**
-	 * Set the mapping function for a coordinates
+	 * Set mapping function for a coordinates
 	 *
 	 * @param {Function} mapping The function which maps a single coordinate
 	 */
@@ -89,7 +89,7 @@ export default class MapElement extends HTMLElement {
 		this._mapping = mapping;
 	}
 	/**
-	 * Get the center
+	 * Get center
 	 *
 	 * @return {{lat: Number, lng: Number}}
 	 */
@@ -97,7 +97,7 @@ export default class MapElement extends HTMLElement {
 		return this._center;
 	}
 	/**
-	 * Set the center
+	 * Set center
 	 *
 	 * @param {{lat: Number, lng: Number}} center The center of the map
 	 */
@@ -106,7 +106,7 @@ export default class MapElement extends HTMLElement {
 		this._map.panTo(this._center);
 	}
 	/**
-	 * Get the zoom
+	 * Get zoom
 	 *
 	 * @return {Number}
 	 */
@@ -114,7 +114,7 @@ export default class MapElement extends HTMLElement {
 		return this._zoom;
 	}
 	/**
-	 * Set the zoom
+	 * Set zoom
 	 *
 	 * @param {Number} zoom The zoom for the map
 	 */
@@ -123,7 +123,7 @@ export default class MapElement extends HTMLElement {
 		this._map.setZoom(this._zoom);
 	}
 	/**
-	 * Get the path
+	 * Get path
 	 *
 	 * @return {{lat: Number, lng: Number}[]}
 	 */
@@ -131,7 +131,7 @@ export default class MapElement extends HTMLElement {
 		return this._path;
 	}
 	/**
-	 * Set the path
+	 * Set path
 	 *
 	 * @param {{lat: Number, lng: Number}[]} path The path as a list of coordinates
 	 */

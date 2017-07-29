@@ -3,19 +3,19 @@
  */
 export default class PlotElement extends HTMLElement {
 	/**
-	 * Construct the element
+	 * Construct element
 	 *
 	 * @param {Object} configuration The configuration for the element
 	 */
 	constructor() {
 		// call parent constructor
 		super();
-		// the relation to plot
+		// relation to plot
 		this._relation = null;
-		// create the canvas
+		// create canvas
 		this._canvas = document.createElement("canvas");
 		this._context = this._canvas.getContext("2d");
-		// the ranges of the plot
+		// ranges of the plot
 		this._ranges = {
 			x: [0, 1],
 			y: [0, 1]
@@ -31,28 +31,28 @@ export default class PlotElement extends HTMLElement {
 		this.appendChild(this._canvas);
 	}
 	/**
-	 * Get the origin
+	 * Get origin
 	 */
 	get origin() {
 		return this._origin;
 	}
 	/**
-	 * Set the origin
+	 * Set origin
 	 */
 	set origin(origin) {
-		// set the value
+		// set value
 		this._origin = origin;
-		// update the element
+		// update element
 		this._update();
 	}
 	/**
-	 * Get the origin
+	 * Get origin
 	 */
 	get resolution() {
 		return this._resolution;
 	}
 	/**
-	 * Set the origin
+	 * Set origin
 	 */
 	set resolution(resolution) {
 		// set the value
@@ -61,13 +61,13 @@ export default class PlotElement extends HTMLElement {
 		this._update();
 	}
 	/**
-	 * Get the ranges
+	 * Get ranges
 	 */
 	get ranges() {
 		return this._ranges;
 	}
 	/**
-	 * Set the ranges
+	 * Set ranges
 	 */
 	set ranges(ranges) {
 		// assign the relation
@@ -76,13 +76,13 @@ export default class PlotElement extends HTMLElement {
 		this._update();
 	}
 	/**
-	 * Get the relation
+	 * Get relation
 	 */
 	get relation() {
 		return this._relation;
 	}
 	/**
-	 * Set the relation
+	 * Set relation
 	 */
 	set relation(relation) {
 		// assign the relation
